@@ -1,11 +1,15 @@
 import png
 import math
-keyword = "Mandelbrot"
+keyword = "Julia"
 centerx = 0.0
-centery=0.5
-span = 0.5
+centery=0.0
+span = 2
+set_color = [255,0,0]
+background_color1 = [150,75,0]
+background_color2 = [0,255,0]
 
-pixel_width = 100.0
+
+pixel_width = 500.0
 count_max=50
 int_pixel_width = int(pixel_width)
 name = keyword+"Set.png"
@@ -36,8 +40,8 @@ while y < pixel_width:
         if keyword == "Julia":
             complex_r = pixel_real
             complex_i = pixel_imaginary
-            z_r = -0.512511498387847167
-            z_i = 0.521295573094847167
+            z_r = 0.38  # -0.512511498387847167
+            z_i = -0.1  # 0.521295573094847167
             while count < count_max and norm < 4:
                 dummy_c_r = complex_r
                 complex_r = complex_r*complex_r - complex_i*complex_i + z_r
@@ -47,28 +51,28 @@ while y < pixel_width:
             print("Where  (" + str(pixel_real) + "," + str(pixel_imaginary) + ") ends up:" + str(norm) + " after " + str(count) + " iterations")
 
         if norm < 4:
-            row.append(0)
-            row.append(0)
-            row.append(0)
+            row.append(set_color[0])
+            row.append(set_color[1])
+            row.append(set_color[2])
 
 
         else:
             greyscale_factor =math.pow((float(count)/count_max), 0.5)
             if greyscale_factor < 0.3:
                 greyscale_factor = greyscale_factor/0.3
-                color1 = 0
-                color2 = 0
-                color3 = int(greyscale_factor*255)
+                color1 = int(greyscale_factor*background_color1[0])
+                color2 = int(greyscale_factor*background_color1[1])
+                color3 = int(greyscale_factor*background_color1[2])
             elif greyscale_factor < 0.7:
                 greyscale_factor = (greyscale_factor-0.3)/0.4
-                color1 = int(greyscale_factor*255)
-                color2 = int(greyscale_factor*255)
-                color3 = 255-int(greyscale_factor*255)
+                color1 = background_color1[0]-int(greyscale_factor*(background_color1[0]-background_color2[0]))
+                color2 = background_color1[1]-int(greyscale_factor*(background_color1[1]-background_color2[1]))
+                color3 = background_color1[2]-int(greyscale_factor*(background_color1[2]-background_color2[2]))
             else:
                 greyscale_factor = (greyscale_factor-0.7)/0.3
-                color1 = 255
-                color2 = 255
-                color3 = int(greyscale_factor * 255)
+                color1 = background_color2[0] - int(greyscale_factor * (background_color2[0] -255))
+                color2 = background_color2[1] - int(greyscale_factor * (background_color2[1] - 255))
+                color3 = background_color2[2] - int(greyscale_factor * (background_color2[2] - 255))
             row.append(color1)
             row.append(color2)
             row.append(color3)
