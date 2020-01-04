@@ -1,22 +1,26 @@
 import png
 import math
 keyword = "Mandelbrot"
-size = 2000.0
+centerx = 0.0
+centery=0.5
+span = 0.5
+
+pixel_width = 100.0
 count_max=50
-int_size = int(size)
+int_pixel_width = int(pixel_width)
 name = keyword+"Set.png"
 
 f = open(name, 'wb')
-mandelbrot = png.Writer(int_size, int_size)
+mandelbrot = png.Writer(int_pixel_width, int_pixel_width, greyscale=False)
 pixArray = []
 x = 0
 y=0
-while y < size:
+while y < pixel_width:
     x=0
     row = []
-    while x < size:
-        pixel_real = (2 * (float(x) - size / 2) / size)
-        pixel_imaginary = (2 * (size / 2 - float(y)) / size)
+    while x < pixel_width:
+        pixel_real = centerx + (2 * (float(x) - pixel_width / 2) / pixel_width) * (span / 2)
+        pixel_imaginary = centery + (2 * (pixel_width / 2 - float(y)) / pixel_width)*(span/2)
         count = 0
         norm = 0
         if keyword == "Mandelbrot":
@@ -73,16 +77,26 @@ while y < size:
     pixArray.append(row)
     y=y+1
 
+# axes
+
+origin_pixelx = int(pixel_width/2 - centerx*pixel_width/span)
+origin_pixely = int(pixel_width/2 - centery*pixel_width/span)
+
+# x-axis
 j=0
-while j<size*3:
-    pixArray[int_size/2][j]=120
-    j=j+1
+if origin_pixely > 0:
+    while j<pixel_width*3:
+        pixArray[origin_pixely][j]=120
+        j=j+1
+
+# y-axis
 j=0
-while j<size:
-    pixArray[j][3*int_size/2]=120
-    pixArray[j][3*int_size/2 +1]=120
-    pixArray[j][3*int_size/2 +2]=120
-    j=j+1
+if origin_pixelx > 0:
+    while j<pixel_width:
+        pixArray[j][3 * origin_pixelx]=120
+        pixArray[j][3 * origin_pixelx + 1]=120
+        pixArray[j][3 * origin_pixelx + 2]=120
+        j=j+1
 
 mandelbrot.write(f, pixArray)
 f.close()
